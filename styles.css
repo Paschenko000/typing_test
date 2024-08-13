@@ -1,0 +1,71 @@
+body {
+    background-color: #191919;
+    box-sizing: border-box;
+    margin: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+button {
+    padding: 10px 15px;
+    font-family: "Montserrat";
+    font-weight: 500;
+    border-radius: 50px;
+    outline: none;
+    border: none;
+    transition: all ease-in-out 0.2s;
+    height: 44px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+h1 {
+    font-family: "Montserrat";
+    font-weight: 600;
+    font-size: 40px;
+    text-transform: uppercase;
+}
+
+
+.btn-start {
+    background-color: #108a00;
+    color: white;
+
+}
+
+@media screen and (hover: hover) {
+    .btn-start:not(:disabled):hover {
+        background-color: #14a800;
+    }
+}
+
+.btn-restart {
+    background-color: white;
+    color: #191919;
+}
+
+@media screen and (hover: hover) {
+    .btn-restart:not(:disabled):hover {
+        background-color: lightgrey;
+    }
+}
+
+.main-heading {
+    color: #ffffff;
+}
+
+.game {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.game-nav {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
