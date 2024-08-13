@@ -69,3 +69,15 @@ h1 {
     flex-direction: row;
     gap: 30px;
 }
+
+.game-words {
+    font-family: "Montserrat";
+    font-weight: 500;
+    font-size: 22px;
+    color: white;
+    display: inline-block;
+}
+
+div.word {
+    marding: 0 5px;
+}

@@ -1,6 +1,6 @@
 
 async function getData() {
- const url = "https://random-word-api.herokuapp.com/word?number=10";
+ const url = "https://random-word-api.herokuapp.com/word?number=100";
 
  try {
   const response = await fetch(url);
@@ -15,8 +15,19 @@ async function getData() {
   console.error(err.message);
  }
 }
-console.log(getData());
 
-function newGame () {
- document.getElementById("words").innerHTML = getData();
+function formatWord(word) {
+ return(
+     `<div class="">${word}</div>`
+ );
 }
+
+async function newGame () {
+ document.getElementById("words").innerHTML = '';
+ const words = await getData();
+  words.map((word) => (
+    document.getElementById("words").innerHTML += formatWord(word)
+  ));
+}
+
+newGame().then();
