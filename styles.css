@@ -1,15 +1,13 @@
 body {
-    background-color: #191919;
+    background-color: #333437;
     box-sizing: border-box;
-    margin: 60px;
-    display: flex;
+    margin: 60px 120px;
     flex-direction: column;
-    gap: 40px;
 }
 
 button {
     padding: 10px 15px;
-    font-family: "Montserrat";
+    font-family: "Roboto Mono";
     font-weight: 500;
     border-radius: 50px;
     outline: none;
@@ -22,7 +20,7 @@ button {
 }
 
 h1 {
-    font-family: "Montserrat";
+    font-family: "Roboto Mono";
     font-weight: 600;
     font-size: 40px;
     text-transform: uppercase;
@@ -30,7 +28,7 @@ h1 {
 
 
 .btn-start {
-    background-color: #108a00;
+    background-color: #008cff;
     color: white;
 
 }
@@ -56,6 +54,12 @@ h1 {
     color: #ffffff;
 }
 
+.game-section {
+    display: flex;
+    flex-direction: column;
+    gap: 40px
+}
+
 .game {
     width: 100%;
     display: flex;
@@ -70,14 +74,89 @@ h1 {
     gap: 30px;
 }
 
-.game-words {
-    font-family: "Montserrat";
-    font-weight: 500;
-    font-size: 22px;
-    color: white;
-    display: inline-block;
+#game {
+    height: 184px;
+    overflow: hidden;
+    position: relative;
+}
+
+#game:focus {
+    outline: 0;
+}
+
+#game:focus #words {
+    filter: blur(0);
+}
+
+#game:focus #focus-error {
+    display: none;
 }
 
 div.word {
-    marding: 0 5px;
+    font-family: "Roboto Mono";
+    font-weight: 400;
+    font-size: 32px;
+    margin: 9px 10px;
+    display: inline-block;
+    line-height: 42px;
+    letter-spacing: 1px;
+}
+
+#words {
+    filter: blur(10px);
+    color: #636669;
+}
+
+#focus-error {
+    color: white;
+    font-family: "Roboto Mono";
+    font-weight: 500;
+    font-size: 18px;
+    position: absolute;
+    inset: 0;
+    text-align: center;
+    padding-top: 75px;
+    transition: all ease-in-out 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.letter.correct {
+    color: white;
+}
+
+.letter.incorrect {
+    color: #e34040;
+}
+
+.letter.underline {
+    text-decoration: underline #e34040 2px;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+#cursor {
+    display: none;
+    width: 2px;
+    height: 42px;
+    background-color: #008cff;
+    position: fixed;
+    top: 252px;
+    left: 130px;
+    animation: blink .7s infinite;
+}
+
+#game:focus #cursor {
+    display: block;
 }
