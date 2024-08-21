@@ -18,14 +18,25 @@
             Score
         </section>
         <section class="game-section">
+            <div id="info">01:00</div>
             <div class="game-nav">
-                <button class="btn-start">Take a test</button>
-                <button class="btn-restart">Restart</button>
-            </div>
-            <div id="game" tabindex="0">
-                <div id="words"></div>
-                <div id="cursor"></div>
-                <div id="focus-error">Click here to focus</div>
+                <div id="game" tabindex="0">
+                    <div id="words"></div>
+                    <div id="cursor"></div>
+                    <div id="focus-error">
+                        <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M26 26L38 38M6 6L20.14 39.94L25.16 25.16L39.94 20.14L6 6Z" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Click here to focus</span>
+                    </div>
+                </div>
+                <button id="restart" class="btn-restart">
+                    <svg width="26" height="26" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M45.9998 8V20M45.9998 20H33.9998M45.9998 20L36.7398 11.28C33.981 8.51947 30.3997 6.73037 26.5357 6.18228C22.6716 5.6342 18.7341 6.35683 15.3165 8.24128C11.8988 10.1257 9.18625 13.0699 7.58748 16.6301C5.98871 20.1904 5.59037 24.1738 6.45249 27.9801C7.31461 31.7864 9.39047 35.2094 12.3673 37.7333C15.3441 40.2572 19.0605 41.7452 22.9566 41.9732C26.8527 42.2011 30.7173 41.1566 33.9681 38.997C37.2189 36.8374 39.6797 33.6798 40.9798 30" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+
+                    <span>Restart</span>
+                </button>
             </div>
         </section>
     </main>

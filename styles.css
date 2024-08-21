@@ -6,17 +6,13 @@ body {
 }
 
 button {
-    padding: 10px 15px;
     font-family: "Roboto Mono";
     font-weight: 500;
-    border-radius: 50px;
     outline: none;
     border: none;
     transition: all ease-in-out 0.2s;
-    height: 44px;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
+    font-size: 22px;
+    background-color: transparent;
 }
 
 h1 {
@@ -27,26 +23,16 @@ h1 {
 }
 
 
-.btn-start {
-    background-color: #008cff;
-    color: white;
-
-}
-
-@media screen and (hover: hover) {
-    .btn-start:not(:disabled):hover {
-        background-color: #14a800;
-    }
-}
-
 .btn-restart {
-    background-color: white;
-    color: #191919;
+    color: #636669;
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 @media screen and (hover: hover) {
     .btn-restart:not(:disabled):hover {
-        background-color: lightgrey;
+        color: #c0bfbf;
     }
 }
 
@@ -57,7 +43,17 @@ h1 {
 .game-section {
     display: flex;
     flex-direction: column;
-    gap: 40px
+    align-items: start;
+    width: 100%;
+    gap: 60px
+}
+
+.game-nav {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
 }
 
 .game {
@@ -65,13 +61,6 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 40px;
-}
-
-.game-nav {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
 }
 
 #game {
@@ -105,6 +94,7 @@ div.word {
 #words {
     filter: blur(10px);
     color: #636669;
+    opacity: 1;
 }
 
 #focus-error {
@@ -115,12 +105,14 @@ div.word {
     position: absolute;
     inset: 0;
     text-align: center;
-    padding-top: 75px;
+    padding-top: 20px;
     transition: all ease-in-out 0.2s;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 20px;
     align-items: center;
+    justify-content: center;
+
 }
 
 .letter.correct {
@@ -133,6 +125,10 @@ div.word {
 
 .letter.underline {
     text-decoration: underline #e34040 2px;
+}
+
+.letter.extra {
+    color: #7e2525;
 }
 
 @keyframes blink {
@@ -148,15 +144,35 @@ div.word {
 }
 #cursor {
     display: none;
-    width: 2px;
+    width: 3px;
     height: 42px;
     background-color: #008cff;
     position: fixed;
-    top: 252px;
-    left: 130px;
+    top: 272px;
+    left: 129px;
     animation: blink .7s infinite;
 }
 
 #game:focus #cursor {
     display: block;
+}
+
+#info {
+    color: #008cff;
+    font-family: Roboto Mono;
+    font-weight: 500;
+    font-size: 34px;
+}
+
+#game.over #words{
+    opacity: .5;
+    filter: blur(0);
+}
+
+#game.over:focus #cursor {
+    display: none;
+}
+
+#game.over #focus-error {
+    display: none;
 }

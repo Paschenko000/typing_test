@@ -1,3 +1,7 @@
+const gameTimer = 60 * 1000;
+window.timer = null;
+window.gameStart = null;
+
 function classAction (action, el, className) {
  /*
  * Function for handling adding or removing of the class
@@ -6,14 +10,12 @@ function classAction (action, el, className) {
  * element
  * class
  * */
- if (action == "add") {
-  el.className += " "+className;
- } else if (action == "remove") {
+ if (action === "add") {
+  el.className += " " + className;
+ } else if (action === "remove") {
   el.className = el.className.replace(className, "");
  }
 }
-
-
 
 async function getWords() {
  // getWord fetches 100 random words from an api
@@ -42,16 +44,44 @@ function formatWord(word) {
 
 async function newGame () {
  // newGame creates a game, calls getWords function and displays words on the screen
- document.getElementById("words").innerHTML = '';
+ classAction("remove", document.getElementById('game'), 'over');
+ document.getElementById("info").innerHTML = 60;
+     document.getElementById("words").innerHTML = '';
  const words = await getWords();
   words.map((word) => {
    document.getElementById("words").innerHTML += formatWord(word);
   });
  classAction("add", document.querySelector('.word'), "current");
  classAction("add", document.querySelector('.letter'), "current");
+ window.timer = null;
 }
 
 newGame().then();
+
+function getWpm () {
+ // Gets an array of all the words and finds last typed word in the list. After checks the words for mistakes
+ const words = [...document.querySelectorAll('.word')];
+ const lastTypedWord = document.querySelector(".word.current");
+ const lastTypedWordI = words.indexOf(lastTypedWord);
+ const typedWords = words.slice(0, lastTypedWordI);
+
+ const correctWords = typedWords.filter(word => {
+  const letters = [...word.children];
+
+  const incLetters = letters.filter(letter => letter.className.includes('incorrect') || letter.className.includes('underline') || letter.className.includes('extra'));
+  const corLetters = letters.filter(letter => letter.className.includes('correct'));
+
+  return incLetters.length === 0 && corLetters.length === letters.length
+ });
+
+ return correctWords.length;
+}
+
+function gameOver () {
+ clearInterval(window.timer);
+ classAction("add", document.getElementById('game'), 'over');
+ document.getElementById("info").innerHTML = `${getWpm()} WPM`
+}
 
 document.getElementById('game').addEventListener('keyup', ev => {
  // Event listener that on trigger starts the game
@@ -63,7 +93,32 @@ document.getElementById('game').addEventListener('keyup', ev => {
  const isSpace = key === " ";
  const isBackspace = key ===  'Backspace';
  const isFirstLetter = currentLetter === currentWord.firstChild;
- console.log({key, expected })
+
+ if (document.querySelector("#game.over")) {
+  return;
+ }
+
+ if (!window.timer && isLetter) {
+  window.timer = setInterval(
+   () => {
+    if (!window.gameStart) {
+     window.gameStart = (new Date()).getTime();
+    }
+
+    const currentTime = (new Date()).getTime();
+    const msPassed = currentTime - window.gameStart;
+    const sPassed = Math.round(msPassed /1000);
+    const sLeft = (gameTimer / 1000) - sPassed;
+
+    if (sLeft <= 0) {
+     gameOver();
+     return;
+    }
+    document.getElementById("info").innerHTML = sLeft + " ";
+   }, 1000
+  );
+
+ }
 
  if (isLetter) {
   if (currentLetter) {
@@ -75,12 +130,13 @@ document.getElementById('game').addEventListener('keyup', ev => {
   } else {
    const incorrectLetter = document.createElement('span');
    incorrectLetter.innerHTML = key;
-   incorrectLetter.className = 'letter incorrect extra';
+   incorrectLetter.className = 'letter extra';
    currentWord.appendChild(incorrectLetter);
   }
 
  } else if (isSpace) {
   if (expected !== " ") {
+   // TODO: fix the bug with underline so it would underline only skipped words or add underline to all incorrect typed words
    const lettersToInvalidate = [...document.querySelectorAll(".word.current .letter:not(.correct)")];
    lettersToInvalidate.forEach(letter => {
     classAction("add", letter, 'underline');
@@ -98,10 +154,10 @@ document.getElementById('game').addEventListener('keyup', ev => {
  }
 
  if (isBackspace) {
-  console.log(currentLetter, isFirstLetter )
+
   if (currentLetter && isFirstLetter) {
    console.log('currentletter and isfirstletter')
-   //make prev word current, last letter current
+   // make prev word current, last letter current
    classAction("remove", currentWord, 'current');
    classAction("add", currentWord.previousSibling, 'current');
    classAction("remove", currentLetter, 'current');
@@ -123,7 +179,6 @@ document.getElementById('game').addEventListener('keyup', ev => {
    classAction("remove", currentWord.lastChild, 'incorrect');
 
   }
-
  }
 
  // Moving lines with words
@@ -142,4 +197,9 @@ document.getElementById('game').addEventListener('keyup', ev => {
 
  cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right']  + 'px';
 
+});
+
+document.getElementById('restart').addEventListener('click', () => {
+ gameOver();
+ newGame().then();
 })
