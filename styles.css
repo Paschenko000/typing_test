@@ -1,8 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     background-color: #333437;
-    box-sizing: border-box;
     margin: 60px 120px;
+    display: flex;
     flex-direction: column;
+    gap: 40px;
+    align-items: start;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
 }
 
 button {
@@ -18,8 +32,16 @@ button {
 h1 {
     font-family: "Roboto Mono";
     font-weight: 600;
-    font-size: 40px;
+    font-size: 52px;
     text-transform: uppercase;
+}
+
+h2 {
+    font-family: "Roboto Mono";
+    font-weight: 500;
+    font-size: 36px;
+    text-transform: uppercase;
+    color: white;
 }
 
 
@@ -45,7 +67,7 @@ h1 {
     flex-direction: column;
     align-items: start;
     width: 100%;
-    gap: 60px
+    gap: 40px;
 }
 
 .game-nav {
@@ -175,4 +197,39 @@ div.word {
 
 #game.over #focus-error {
     display: none;
+}
+
+.score-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    align-items: start;
+}
+
+.score-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    row-gap: 0;
+    flex-wrap: wrap;
+    column-gap: 15px;
+}
+
+.score {
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
+    width: calc((100% - 20px) / 2);
+    font-family: Roboto Mono;
+    font-weight: 400;
+    font-size: 18px;
+    color: white;
+}
+
+.dark {
+    background-color: #2b2e31;
 }

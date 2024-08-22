@@ -130,7 +130,7 @@ document.getElementById('game').addEventListener('keyup', ev => {
   } else {
    const incorrectLetter = document.createElement('span');
    incorrectLetter.innerHTML = key;
-   incorrectLetter.className = 'letter extra';
+   incorrectLetter.className = 'letter incorrect extra';
    currentWord.appendChild(incorrectLetter);
   }
 
@@ -139,9 +139,10 @@ document.getElementById('game').addEventListener('keyup', ev => {
    // TODO: fix the bug with underline so it would underline only skipped words or add underline to all incorrect typed words
    const lettersToInvalidate = [...document.querySelectorAll(".word.current .letter:not(.correct)")];
    lettersToInvalidate.forEach(letter => {
-    classAction("add", letter, 'underline');
+    classAction("add", letter, 'incorrect');
    });
   }
+
 
   classAction('remove', currentWord, 'current');
   classAction('add', currentWord.nextSibling, 'current');
@@ -156,14 +157,22 @@ document.getElementById('game').addEventListener('keyup', ev => {
  if (isBackspace) {
 
   if (currentLetter && isFirstLetter) {
-   console.log('currentletter and isfirstletter')
+   // TODO: delete extra letters
    // make prev word current, last letter current
+
    classAction("remove", currentWord, 'current');
    classAction("add", currentWord.previousSibling, 'current');
    classAction("remove", currentLetter, 'current');
    classAction("add", currentWord.previousSibling.lastChild, 'current');
+   const currentL = currentWord.previousSibling.lastChild;
+
+   if (currentL.classList.includes("extra")) {
+    console.log("includes")
+    currentWord.previousSibling.lastChild.remove();
+   }
    classAction("remove", currentWord.previousSibling.lastChild, 'incorrect');
    classAction("remove", currentWord.previousSibling.lastChild, 'correct');
+
 
   } else if (currentLetter && !isFirstLetter) {
    // move back one letter, invalidate latter
