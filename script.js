@@ -138,6 +138,7 @@ function getAllScore() {
 }
 
 function getScore() {
+ // TODO: doesn't display score right after game over, need to reload the page to display last score !
  const scoreJson = localStorage.getItem("score");
  const score = JSON.parse(scoreJson);
  document.getElementById('score').innerHTML += `<div class="score dark"><span>${score[score.length].wpm} wpm</span><span>${formatDate(score[score.length].date)}</span></div>`;
@@ -226,6 +227,7 @@ document.getElementById('game').addEventListener('keyup', ev => {
    classAction("add", currentWord.previousSibling.lastChild, 'current');
    const currentL = currentWord.previousSibling.lastChild;
 
+   // TODO: check why this isn't working
    if (currentL.classList.includes("extra")) {
     console.log("includes")
     currentWord.previousSibling.lastChild.remove();
