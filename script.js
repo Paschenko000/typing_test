@@ -5,10 +5,7 @@ window.gameStart = null;
 function classAction (action, el, className) {
  /*
  * Function for handling adding or removing of the class
- * Expected args:
  * action: 'add' || 'remove'
- * element
- * class
  * */
  if (action === "add") {
   el.className += " " + className;
@@ -17,9 +14,31 @@ function classAction (action, el, className) {
  }
 }
 
+function formatDate(date) {
+ date = new Date(date);
+ // Extract hours and minutes
+ let hours = date.getHours();
+ let minutes = date.getMinutes();
+
+ // Ensure minutes are two digits
+ minutes = minutes < 10 ? '0' + minutes : minutes;
+
+ // Extract the month abbreviation
+ const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+ let month = monthNames[date.getMonth()];
+
+ // Extract the year
+ let year = date.getFullYear();
+
+ // Construct the formatted date string
+ return `${hours}:${minutes} ${month} ${year}`;
+}
+
 async function getWords() {
  // getWord fetches 100 random words from an api
  const url = "https://random-word-api.herokuapp.com/word?number=100";
+ const urlIpsum = "https://api.api-ninjas.com/v1/loremipsum?paragraphs=2"
 
  try {
   const response = await fetch(url);
@@ -46,9 +65,9 @@ async function newGame () {
  // newGame creates a game, calls getWords function and displays words on the screen
  classAction("remove", document.getElementById('game'), 'over');
  document.getElementById("info").innerHTML = 60;
-     document.getElementById("words").innerHTML = '';
- const words = await getWords();
-  words.map((word) => {
+ document.getElementById("words").innerHTML = '';
+ const words = [...await getWords()];
+ words.map((word) => {
    document.getElementById("words").innerHTML += formatWord(word);
   });
  classAction("add", document.querySelector('.word'), "current");
@@ -57,6 +76,7 @@ async function newGame () {
 }
 
 newGame().then();
+getAllScore();
 
 function getWpm () {
  // Gets an array of all the words and finds last typed word in the list. After checks the words for mistakes
@@ -80,7 +100,41 @@ function getWpm () {
 function gameOver () {
  clearInterval(window.timer);
  classAction("add", document.getElementById('game'), 'over');
- document.getElementById("info").innerHTML = `${getWpm()} WPM`
+ const wpm = getWpm();
+ document.getElementById("info").innerHTML = `${wpm} WPM`
+ addScore(wpm);
+ getScore();
+}
+
+function addScore(wpm) {
+ // Creates and updates localStorage with key score
+ const storageJson = localStorage.getItem("score");
+ if (!storageJson) {
+  localStorage.setItem("score", JSON.stringify([{wpm, date:  new Date()}]));
+ } else {
+  const storage = JSON.parse(storageJson);
+  storage.push({wpm, date: new Date()});
+  localStorage.setItem("score", JSON.stringify(storage));
+ }
+}
+
+function getAllScore() {
+ const scoreJson = localStorage.getItem("score");
+
+ if (!scoreJson) {
+  document.getElementById('no-score').innerHTML += "You don't have score yet";
+ } else {
+  const score = JSON.parse(scoreJson);
+  score.forEach((item, i) => {
+    document.getElementById('score').innerHTML += `<div class="score dark"><span>${item.wpm} wpm</span><span>${formatDate(item.date)}</span></div>`;
+  });
+ }
+}
+
+function getScore() {
+ const scoreJson = localStorage.getItem("score");
+ const score = JSON.parse(scoreJson);
+ document.getElementById('score').innerHTML += `<div class="score dark"><span>${score[score.length].wpm} wpm</span><span>${formatDate(score[score.length].date)}</span></div>`;
 }
 
 document.getElementById('game').addEventListener('keyup', ev => {
@@ -189,6 +243,8 @@ document.getElementById('game').addEventListener('keyup', ev => {
 
   }
  }
+
+ // TODO: after finishing the game reset the cursor to its initial position
 
  // Moving lines with words
  if (currentWord.getBoundingClientRect().top > 350) {
