@@ -106,6 +106,12 @@ function gameOver () {
  getScore();
 }
 
+function restartGame() {
+ clearInterval(window.timer);
+ classAction("add", document.getElementById('game'), 'over');
+
+}
+
 function addScore(wpm) {
  // Creates and updates localStorage with key score
  const storageJson = localStorage.getItem("score");
@@ -265,6 +271,6 @@ document.getElementById('game').addEventListener('keyup', ev => {
 });
 
 document.getElementById('restart').addEventListener('click', () => {
- gameOver();
+ restartGame();
  newGame().then();
 })

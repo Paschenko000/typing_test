@@ -230,3 +230,11 @@ div.word {
     color: white;
     background-color: #2b2e31;
 }
+
+#no-score {
+    width: 100%;
+    font-family: "Roboto Mono";
+    font-size: 26px;
+    color: #c0bfbf;
+    text-align: center;
+}
