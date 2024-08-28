@@ -270,9 +270,14 @@ document.getElementById('game').addEventListener('keyup', ev => {
 
   } else if (!currentLetter) {
    // Handling backspace click when blank space is expected
-   classAction("add", currentWord.lastChild, 'current');
-   classAction("remove", currentWord.lastChild, 'correct');
-   classAction("remove", currentWord.lastChild, 'incorrect');
+
+   if (currentWord.lastChild.classList.contains("extra")) {
+    currentWord.lastChild.remove();
+   } else {
+    classAction("add", currentWord.lastChild, 'current');
+    classAction("remove", currentWord.lastChild, 'correct');
+    classAction("remove", currentWord.lastChild, 'incorrect');
+   }
 
   }
  }
