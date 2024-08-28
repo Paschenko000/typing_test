@@ -97,6 +97,7 @@ h2 {
 
 #game:focus #words {
     filter: blur(0);
+
 }
 
 #game:focus #focus-error {
@@ -170,7 +171,7 @@ div.word {
     height: 42px;
     background-color: #008cff;
     position: fixed;
-    top: 272px;
+    top: 265px;
     left: 129px;
     animation: blink .7s infinite;
 }

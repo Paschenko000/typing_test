@@ -76,7 +76,7 @@ async function newGame () {
 }
 
 newGame().then();
-getAllScore();
+displayAllScore();
 
 function getWpm () {
  // Gets an array of all the words and finds last typed word in the list. After checks the words for mistakes
@@ -94,58 +94,79 @@ function getWpm () {
   return incLetters.length === 0 && corLetters.length === letters.length
  });
 
- return correctWords.length;
+ return Math.round(correctWords.length * 1.8);
 }
 
 function gameOver () {
+ document.body.style.overflow = "auto";
  clearInterval(window.timer);
  classAction("add", document.getElementById('game'), 'over');
  const wpm = getWpm();
- document.getElementById("info").innerHTML = `${wpm} WPM`
+ document.getElementById("info").innerHTML = `${wpm} WPM`;
  addScore(wpm);
- getScore();
+ displayLastScore();
+ const cursor = document.getElementById('cursor');
+ cursor.style.top = '265px';
+ cursor.style.left = '129px';
 }
 
 function restartGame() {
+ document.body.style.overflow = "auto";
  clearInterval(window.timer);
  classAction("add", document.getElementById('game'), 'over');
+ const cursor = document.getElementById('cursor');
+ cursor.style.top = '265px';
+ cursor.style.left = '129px';
+}
+
+function getScore() {
+ const scoreData = localStorage.getItem('score');
+
+ if (!scoreData) {
+  return [];
+ }
+
+ try {
+  const score = JSON.parse(scoreData);
+  if (!Array.isArray(score)) {
+   return [];
+  }
+  return score;
+ } catch (err) {
+  return [];
+ }
 
 }
 
 function addScore(wpm) {
  // Creates and updates localStorage with key score
- const storageJson = localStorage.getItem("score");
- if (!storageJson) {
-  localStorage.setItem("score", JSON.stringify([{wpm, date:  new Date()}]));
- } else {
-  const storage = JSON.parse(storageJson);
+  const storage = getScore();
   storage.push({wpm, date: new Date()});
   localStorage.setItem("score", JSON.stringify(storage));
- }
 }
 
-function getAllScore() {
- const scoreJson = localStorage.getItem("score");
+function displayAllScore() {
+ const score = getScore();
 
- if (!scoreJson) {
+ if (!score.length) {
   document.getElementById('no-score').innerHTML += "You don't have score yet";
  } else {
-  const score = JSON.parse(scoreJson);
   score.forEach((item, i) => {
     document.getElementById('score').innerHTML += `<div class="score dark"><span>${item.wpm} wpm</span><span>${formatDate(item.date)}</span></div>`;
   });
  }
 }
 
-function getScore() {
- // TODO: doesn't display score right after game over, need to reload the page to display last score !
- const scoreJson = localStorage.getItem("score");
- const score = JSON.parse(scoreJson);
- document.getElementById('score').innerHTML += `<div class="score dark"><span>${score[score.length].wpm} wpm</span><span>${formatDate(score[score.length].date)}</span></div>`;
+function displayLastScore() {
+//  TODO: doesn't display score right after game over, need to reload the page to display last score !
+ const score = getScore();
+ const currentScore = score.length - 1;
+ document.getElementById('score').innerHTML += `<div class="score dark"><span>${score[score.length - 1].wpm} wpm</span><span>${formatDate(score[score.length - 1].date)}</span></div>`;
 }
 
 document.getElementById('game').addEventListener('keyup', ev => {
  // Event listener that on trigger starts the game
+ document.body.style.overflow = "hidden";
  const key = ev.key;
  const currentWord = document.querySelector('.word.current');
  const currentLetter = document.querySelector('.letter.current');
@@ -227,10 +248,9 @@ document.getElementById('game').addEventListener('keyup', ev => {
    classAction("add", currentWord.previousSibling.lastChild, 'current');
    const currentL = currentWord.previousSibling.lastChild;
 
-   // TODO: check why this isn't working
-   if (currentL.classList.includes("extra")) {
+   if (currentL.classList.contains("extra")) {
     console.log("includes")
-    currentWord.previousSibling.lastChild.remove();
+    currentL.remove();
    }
    classAction("remove", currentWord.previousSibling.lastChild, 'incorrect');
    classAction("remove", currentWord.previousSibling.lastChild, 'correct');
@@ -243,6 +263,11 @@ document.getElementById('game').addEventListener('keyup', ev => {
    classAction("remove", currentLetter.previousSibling, 'incorrect');
    classAction("remove", currentLetter.previousSibling, 'correct');
 
+   const currentL = currentLetter.previousSibling;
+   if (currentL.classList.contains("extra")) {
+    currentL.remove();
+   }
+
   } else if (!currentLetter) {
    // Handling backspace click when blank space is expected
    classAction("add", currentWord.lastChild, 'current');
@@ -251,8 +276,6 @@ document.getElementById('game').addEventListener('keyup', ev => {
 
   }
  }
-
- // TODO: after finishing the game reset the cursor to its initial position
 
  // Moving lines with words
  if (currentWord.getBoundingClientRect().top > 350) {
