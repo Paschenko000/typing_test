@@ -16,23 +16,18 @@ function classAction (action, el, className) {
 
 function formatDate(date) {
  date = new Date(date);
- // Extract hours and minutes
  let hours = date.getHours();
  let minutes = date.getMinutes();
 
- // Ensure minutes are two digits
  minutes = minutes < 10 ? '0' + minutes : minutes;
 
- // Extract the month abbreviation
+ let day = date.getDate();
+
  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
  let month = monthNames[date.getMonth()];
 
- // Extract the year
- let year = date.getFullYear();
-
- // Construct the formatted date string
- return `${hours}:${minutes} ${month} ${year}`;
+ return `${hours}:${minutes} ${day} ${month}`;
 }
 
 async function getWords() {
@@ -78,33 +73,42 @@ async function newGame () {
 newGame().then();
 displayAllScore();
 
-function getWpm () {
+function getTypingSpeed () {
  // Gets an array of all the words and finds last typed word in the list. After checks the words for mistakes
+ // returns {wpm: number, accuracy: number}
  const words = [...document.querySelectorAll('.word')];
  const lastTypedWord = document.querySelector(".word.current");
  const lastTypedWordI = words.indexOf(lastTypedWord);
- const typedWords = words.slice(0, lastTypedWordI);
+ const typedWords = words.slice(0, lastTypedWordI + 1);
+ let typedLettersCount = 0;
+ let incLettersCount = 0;
 
- const correctWords = typedWords.filter(word => {
+
+ typedWords.forEach((word, index) => {
   const letters = [...word.children];
 
-  const incLetters = letters.filter(letter => letter.className.includes('incorrect') || letter.className.includes('underline') || letter.className.includes('extra'));
-  const corLetters = letters.filter(letter => letter.className.includes('correct'));
+  const typedLetters = index === typedWords.length - 1 ? letters.slice(0, letters.findIndex(({classList}) => classList.contains('current'))) : letters;
 
-  return incLetters.length === 0 && corLetters.length === letters.length
- });
+  for (const letter of typedLetters) {
+   if (!letter.classList.contains('correct')) {
+    incLettersCount++;
+   }
+  }
+  typedLettersCount += typedLetters.length;
+ })
 
- return Math.round(correctWords.length * 1.8);
+ return {wpm: Math.round(typedLettersCount / 5), accuracy: Math.round(((typedLettersCount - incLettersCount) * 100 ) / typedLettersCount)}
 }
 
 function gameOver () {
  document.body.style.overflow = "auto";
  clearInterval(window.timer);
  classAction("add", document.getElementById('game'), 'over');
- const wpm = getWpm();
- document.getElementById("info").innerHTML = `${wpm} WPM`;
- addScore(wpm);
- displayLastScore();
+ const result = getTypingSpeed();
+
+ document.getElementById("info").innerHTML = `${result.wpm} WPM`;
+ addScore(result);
+ displayAllScore();
  const cursor = document.getElementById('cursor');
  cursor.style.top = '265px';
  cursor.style.left = '129px';
@@ -138,10 +142,10 @@ function getScore() {
 
 }
 
-function addScore(wpm) {
+function addScore(result) {
  // Creates and updates localStorage with key score
   const storage = getScore();
-  storage.push({wpm, date: new Date()});
+  storage.push({wpm: result.wpm, accuracy: result.accuracy, date: new Date()});
   localStorage.setItem("score", JSON.stringify(storage));
 }
 
@@ -149,19 +153,12 @@ function displayAllScore() {
  const score = getScore();
 
  if (!score.length) {
-  document.getElementById('no-score').innerHTML += "You don't have score yet";
+  document.getElementById('no-score').innerHTML = "You don't have score yet";
  } else {
-  score.forEach((item, i) => {
-    document.getElementById('score').innerHTML += `<div class="score dark"><span>${item.wpm} wpm</span><span>${formatDate(item.date)}</span></div>`;
-  });
+  document.getElementById('score').innerHTML = score.reduce((acc, item) =>
+   acc += `<div class="score dark"> <div class="result"> <span>${item.wpm} wpm</span><span>accuracy ${item.accuracy} %</span></div> <span>${formatDate(item.date)}</span></div>`
+  , '');
  }
-}
-
-function displayLastScore() {
-//  TODO: doesn't display score right after game over, need to reload the page to display last score !
- const score = getScore();
- const currentScore = score.length - 1;
- document.getElementById('score').innerHTML += `<div class="score dark"><span>${score[score.length - 1].wpm} wpm</span><span>${formatDate(score[score.length - 1].date)}</span></div>`;
 }
 
 document.getElementById('game').addEventListener('keyup', ev => {
@@ -218,7 +215,6 @@ document.getElementById('game').addEventListener('keyup', ev => {
 
  } else if (isSpace) {
   if (expected !== " ") {
-   // TODO: fix the bug with underline so it would underline only skipped words or add underline to all incorrect typed words
    const lettersToInvalidate = [...document.querySelectorAll(".word.current .letter:not(.correct)")];
    lettersToInvalidate.forEach(letter => {
     classAction("add", letter, 'incorrect');
@@ -239,7 +235,6 @@ document.getElementById('game').addEventListener('keyup', ev => {
  if (isBackspace) {
 
   if (currentLetter && isFirstLetter) {
-   // TODO: delete extra letters
    // make prev word current, last letter current
 
    classAction("remove", currentWord, 'current');
@@ -249,7 +244,6 @@ document.getElementById('game').addEventListener('keyup', ev => {
    const currentL = currentWord.previousSibling.lastChild;
 
    if (currentL.classList.contains("extra")) {
-    console.log("includes")
     currentL.remove();
    }
    classAction("remove", currentWord.previousSibling.lastChild, 'incorrect');

@@ -41,7 +41,7 @@ h2 {
     font-weight: 500;
     font-size: 36px;
     text-transform: uppercase;
-    color: white;
+    color: #d1d0c5;
 }
 
 
@@ -54,12 +54,12 @@ h2 {
 
 @media screen and (hover: hover) {
     .btn-restart:not(:disabled):hover {
-        color: #c0bfbf;
+        color: #d1d0c5;
     }
 }
 
 .main-heading {
-    color: #ffffff;
+    color: #d1d0c5;
 }
 
 .game-section {
@@ -121,7 +121,7 @@ div.word {
 }
 
 #focus-error {
-    color: white;
+    color: #d1d0c5;
     font-family: "Roboto Mono";
     font-weight: 500;
     font-size: 18px;
@@ -139,15 +139,11 @@ div.word {
 }
 
 .letter.correct {
-    color: white;
+    color: #d1d0c5;
 }
 
 .letter.incorrect {
     color: #e34040;
-}
-
-.letter.underline {
-    text-decoration: underline #e34040 2px;
 }
 
 .letter.extra {
@@ -223,19 +219,27 @@ div.word {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 20px;
+    align-items: start;
+    gap: 30px;
     width: calc((100% - 20px) / 2);
     font-family: Roboto Mono;
-    font-weight: 400;
+    font-weight: 300;
     font-size: 18px;
-    color: white;
+    color: #d1d0c5;
     background-color: #2b2e31;
+}
+
+.result {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: start;
 }
 
 #no-score {
     width: 100%;
     font-family: "Roboto Mono";
     font-size: 26px;
-    color: #c0bfbf;
+    color: #d1d0c5;
     text-align: center;
 }
