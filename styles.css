@@ -243,3 +243,7 @@ div.word {
     color: #d1d0c5;
     text-align: center;
 }
+
+.display-message {
+    display: none;
+}

@@ -153,11 +153,12 @@ function displayAllScore() {
  const score = getScore();
 
  if (!score.length) {
-  document.getElementById('no-score').innerHTML = "You don't have score yet";
+  return;
  } else {
   document.getElementById('score').innerHTML = score.reduce((acc, item) =>
    acc += `<div class="score dark"> <div class="result"> <span>${item.wpm} wpm</span><span>accuracy ${item.accuracy} %</span></div> <span>${formatDate(item.date)}</span></div>`
   , '');
+  classAction("add", document.getElementById('no-score'), "display-message");
  }
 }
 
