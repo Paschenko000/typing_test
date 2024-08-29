@@ -103,7 +103,7 @@ function getTypingSpeed () {
 }
 
 function gameOver () {
- document.body.style.overflow = "auto";
+
  clearInterval(window.timer);
  classAction("add", document.getElementById('game'), 'over');
  const result = getTypingSpeed();
@@ -117,7 +117,7 @@ function gameOver () {
 }
 
 function restartGame() {
- document.body.style.overflow = "auto";
+
  clearInterval(window.timer);
  const cursor = document.getElementById('cursor');
  cursor.style.top = '12px';
@@ -165,7 +165,6 @@ function displayAllScore() {
 
 document.getElementById('game').addEventListener('keyup', ev => {
  // Event listener that on trigger starts the game
- document.body.style.overflow = "hidden";
  const key = ev.key;
  const currentWord = document.querySelector('.word.current');
  const currentLetter = document.querySelector('.letter.current');
