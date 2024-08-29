@@ -112,16 +112,16 @@ function gameOver () {
  addScore(result);
  displayAllScore();
  const cursor = document.getElementById('cursor');
- cursor.style.top = '265px';
- cursor.style.left = '129px';
+ cursor.style.top = '12px';
+ cursor.style.left = '8px';
 }
 
 function restartGame() {
  document.body.style.overflow = "auto";
  clearInterval(window.timer);
  const cursor = document.getElementById('cursor');
- cursor.style.top = '265px';
- cursor.style.left = '129px';
+ cursor.style.top = '12px';
+ cursor.style.left = '8px';
 }
 
 function getScore() {
@@ -291,10 +291,10 @@ document.getElementById('game').addEventListener('keyup', ev => {
  const nextLetter = document.querySelector('.letter.current');
  const cursor = document.getElementById('cursor');
  const nextWord = document.querySelector('.word.current');
+ console.log((nextLetter || nextWord).getBoundingClientRect().top , (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'])
+ cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top - 249  + 'px';
 
- cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top + 2  + 'px';
-
- cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right']  + 'px';
+ cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'] - 122  + 'px';
 
 });
 

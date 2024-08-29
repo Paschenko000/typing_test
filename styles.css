@@ -167,9 +167,9 @@ div.word {
     width: 3px;
     height: 42px;
     background-color: #008cff;
-    position: fixed;
-    top: 265px;
-    left: 129px;
+    position: absolute;
+    top: 12px;
+    left: 8px;
     animation: blink .7s infinite;
 }
 
