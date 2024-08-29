@@ -119,7 +119,6 @@ function gameOver () {
 function restartGame() {
  document.body.style.overflow = "auto";
  clearInterval(window.timer);
- classAction("add", document.getElementById('game'), 'over');
  const cursor = document.getElementById('cursor');
  cursor.style.top = '265px';
  cursor.style.left = '129px';
@@ -158,7 +157,7 @@ function displayAllScore() {
   return;
  } else {
   document.getElementById('score').innerHTML = score.reduce((acc, item) =>
-   acc += `<div class="score dark"> <div class="result"> <span>${item.wpm} wpm</span><span>accuracy ${item.accuracy} %</span></div> <span>${formatDate(item.date)}</span></div>`
+   acc += `<div class="score dark"> <div class="result"> <span>${item.wpm} wpm</span><span>accuracy ${item.accuracy}%</span></div> <span>${formatDate(item.date)}</span></div>`
   , '');
   classAction("add", document.getElementById('no-score'), "display-message");
  }
@@ -203,17 +202,19 @@ document.getElementById('game').addEventListener('keyup', ev => {
  }
 
  if (isLetter) {
+  const letters = [...currentWord.children];
+  const extraLetters = letters.filter(letter => letter.className.includes("extra"));
   if (currentLetter) {
    classAction("add", currentLetter, key === expected ? "correct" : "incorrect");
    classAction("remove", currentLetter, "current");
    if (currentLetter.nextSibling) {
     classAction("add", currentLetter.nextSibling, "current");
    }
-  } else {
-   const incorrectLetter = document.createElement('span');
-   incorrectLetter.innerHTML = key;
-   incorrectLetter.className = 'letter incorrect extra';
-   currentWord.appendChild(incorrectLetter);
+  } else if (extraLetters.length < 10) {
+    const incorrectLetter = document.createElement('span');
+    incorrectLetter.innerHTML = key;
+    incorrectLetter.className = 'letter incorrect extra';
+    currentWord.appendChild(incorrectLetter);
   }
 
  } else if (isSpace) {
