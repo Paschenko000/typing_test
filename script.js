@@ -97,7 +97,9 @@ function getTypingSpeed () {
   typedLettersCount += typedLetters.length;
  })
 
- return {wpm: Math.round(typedLettersCount / 5), accuracy: Math.round(((typedLettersCount - incLettersCount) * 100 ) / typedLettersCount)}
+ const accuracy = Math.round(((typedLettersCount - incLettersCount) * 100 ) / typedLettersCount);
+
+ return {wpm: Math.round(typedLettersCount / 5), accuracy: (accuracy ? accuracy : 0 )}
 }
 
 function gameOver () {
