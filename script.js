@@ -1,6 +1,6 @@
-const gameTimer = 60 * 1000;
-window.timer = null;
-window.gameStart = null;
+
+let timer = null;
+let gameTimer = null;
 
 function classAction (action, el, className) {
  /*
@@ -67,7 +67,7 @@ async function newGame () {
   });
  classAction("add", document.querySelector('.word'), "current");
  classAction("add", document.querySelector('.letter'), "current");
- window.timer = null;
+ gameTimer = 60;
 }
 
 newGame().then();
@@ -103,8 +103,9 @@ function getTypingSpeed () {
 }
 
 function gameOver () {
-
- clearInterval(window.timer);
+ document.body.style.overflow = "auto";
+ clearInterval(timer);
+ timer = null;
  classAction("add", document.getElementById('game'), 'over');
  const result = getTypingSpeed();
 
@@ -117,8 +118,9 @@ function gameOver () {
 }
 
 function restartGame() {
-
- clearInterval(window.timer);
+ document.body.style.overflow = "auto";
+ clearInterval(timer);
+ timer = null;
  const cursor = document.getElementById('cursor');
  cursor.style.top = '12px';
  cursor.style.left = '8px';
@@ -165,6 +167,7 @@ function displayAllScore() {
 
 document.getElementById('game').addEventListener('keyup', ev => {
  // Event listener that on trigger starts the game
+ document.body.style.overflow = "hidden";
  const key = ev.key;
  const currentWord = document.querySelector('.word.current');
  const currentLetter = document.querySelector('.letter.current');
@@ -178,23 +181,18 @@ document.getElementById('game').addEventListener('keyup', ev => {
   return;
  }
 
- if (!window.timer && isLetter) {
-  window.timer = setInterval(
+ if (!timer && isLetter) {
+  timer = setInterval(
    () => {
-    if (!window.gameStart) {
-     window.gameStart = (new Date()).getTime();
-    }
-
-    const currentTime = (new Date()).getTime();
-    const msPassed = currentTime - window.gameStart;
-    const sPassed = Math.round(msPassed /1000);
-    const sLeft = (gameTimer / 1000) - sPassed;
-
-    if (sLeft <= 0) {
+    if (!gameTimer) {
+     clearInterval(timer);
      gameOver();
      return;
     }
-    document.getElementById("info").innerHTML = sLeft + " ";
+
+    gameTimer--;
+
+    document.getElementById("info").innerHTML = gameTimer + " ";
    }, 1000
   );
 
@@ -290,7 +288,6 @@ document.getElementById('game').addEventListener('keyup', ev => {
  const nextLetter = document.querySelector('.letter.current');
  const cursor = document.getElementById('cursor');
  const nextWord = document.querySelector('.word.current');
- console.log((nextLetter || nextWord).getBoundingClientRect().top , (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'])
  cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top - 249  + 'px';
 
  cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'] - 122  + 'px';
